@@ -14,23 +14,23 @@
 ## #######################################
 # Decompression: these types need a first pass to create a temp file to
 # work with. We use a script because uncompress utilities usually work in
-# place, which is not suitable. 
+# place, which is not suitable.
 #
 # Obviously this should be in a [decompress] section or such, but it was
 # once forgotten and remained global for compatibility. The first word
 # 'uncompress' should have been the section name and has no other meaning.
-# 
+#
 # The second word is the name of a script or program to execute to
 # produce an uncompressed copy (e.g.: rcluncomp). It must output the
 # uncompressed file name on stdout, and produce no data out of the
 # temporary directory given as parameter. The uncompressed file name should
 # preserve the original file extension (i.e. use gunzip myfile.doc.gz not
 # gunzip < myfile.doc.gz > myfile.whateverwrongextension)
-# 
+#
 # The %t parameter will be substituted to the name of a temporary directory
 # by recoll. This directory is guaranteed empty when calling the filter.
 #
-# The %f parameter will be substituted with the input file. 
+# The %f parameter will be substituted with the input file.
 #
 # Note that it should be possible to improve performance a lot by writing a
 # compressor-specific script instead of the generic rcluncomp which will
@@ -46,7 +46,7 @@ application/x-xz = uncompress rcluncomp unxz %f %t
 application/x-zstd = uncompress rcluncomp "unzstd --rm -q" %f %t
 
 ## ###################################
-# Filters for indexing and internal preview. 
+# Filters for indexing and internal preview.
 # The "internal" filters are hardwired in the c++ code.
 # The external "exec" filters are typically scripts. By default, they output the
 # document in simple html format, have a look at the scripts.
@@ -56,10 +56,10 @@ application/x-zstd = uncompress rcluncomp "unzstd --rm -q" %f %t
 
 # MSWORD: the rcldoc script handles a number of marginal case that raw
 # antiword won't:
-#  - with wvWare: "text stream of this file is too small to handle" 
+#  - with wvWare: "text stream of this file is too small to handle"
 #  - with unrtf: rtf files disguising as doc files.
 # The default is now again to use rcldoc. Use raw antiword if speed is more
-# important for you than catching all data, 
+# important for you than catching all data,
 application/msword = execm rcldoc.py
 #application/msword = exec antiword -t -i 1 -m UTF-8;mimetype=text/plain
 # You can also use wvware directly but it's much slower.
@@ -149,8 +149,8 @@ application/vnd.sun.xml.writer.template = \
  internal xsltproc meta meta.xml opendoc-meta.xsl \
  body content.xml opendoc-body.xsl
 
-#application/x-mobipocket-ebook = execm rclmobi
-#application/x-tar = execm rcltar.py
+application/x-mobipocket-ebook = exec rclmobi;mimetype=text/plain
+#application/x-tar = execm rcltar
 
 application/epub+zip = execm rclepub.py
 application/x-ipynb+json = exec jupyter nbconvert --to html --stdout ; mimetype = text/html
@@ -211,9 +211,9 @@ inode/x-empty = internal application/x-zerosize
 message/rfc822 = internal
 text/calendar = execm rclics.py;mimetype=text/plain
 text/css = internal text/plain
-text/html  = internal 
-text/plain = internal 
-text/plain1 = internal 
+text/html  = internal
+text/plain = internal
+text/plain1 = internal
 text/rtf = exec unrtf --nopict --html;mimetype=text/html
 application/rtf = exec unrtf --nopict --html;mimetype=text/html
 text/x-bibtex = exec rclbibtex.sh ; mimetype = text/plain
@@ -547,4 +547,3 @@ presentation = rclcat:presentation
 media = rclcat:media
 message = rclcat:message
 other = rclcat:other
-
