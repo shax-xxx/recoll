@@ -38,6 +38,7 @@ _okexts = ('.tif', '.tiff', '.jpg', '.png', '.jpeg')
 tesseractcmd = None
 pdftoppmcmd = None
 pdftocairocmd = None
+ddjvucmd = None
 
 def _deb(s):
     rclexecm.logmsg("rclocrtesseract: %s" % s)
@@ -82,7 +83,7 @@ def ocrpossible(config, path):
     if not os.path.isfile(tesseractcmd):
         _deb("tesseractcmd parameter [%s] is not a file" % tesseractcmd)
         return False
-    
+
     # Check input format
     base,ext = os.path.splitext(path)
     ext = ext.lower()
@@ -105,6 +106,14 @@ def ocrpossible(config, path):
                 if not pdftoppmcmd:
                     pdftoppmcmd = rclexecm.which("poppler/pdftoppm")
         if pdftoppmcmd or pdftocairocmd:
+            return True
+
+    if ext == '.djvu':
+        global ddjvucmd
+        if not ddjvucmd:
+            ddjvucmd = rclexecm.which("ddjvu")
+        _deb("[%s]" % ddjvucmd)
+        if ddjvucmd:
             return True
 
     return False
@@ -180,12 +189,76 @@ def _pdftesseract(config, path):
     # Note: unfortunately, pdftoppm silently fails if the temp file
     # system is full. There is no really good way to check for
     # this. We consider any empty file to signal an error
-    
+
     pages = glob.glob(tmpfile + "*")
     for f in pages:
         size = os.path.getsize(f)
         if os.path.getsize(f) == 0:
             _deb("pdftoppm created empty files. "
+                 "Suspecting full file system, failing")
+            return False, ""
+
+    nenv = os.environ.copy()
+    cnthreads = config.getConfParam("tesseractnthreads")
+    if cnthreads:
+        try:
+            nthreads = int(cnthreads)
+            nenv['OMP_THREAD_LIMIT'] = cnthreads
+        except:
+            pass
+
+    for f in sorted(pages):
+        out = b''
+        try:
+            out = subprocess.check_output(
+                [tesseractcmd, f, f, "-l", tesseractlang],
+                stderr=subprocess.STDOUT, env=nenv)
+        except Exception as e:
+            _deb("%s failed: %s" % (tesseractcmd,e))
+
+        errlines = out.split(b'\n')
+        if len(errlines) > 5:
+            _deb("Tesseract error output: %d %s" % (len(errlines),out))
+
+    # Concatenate the result files
+    txtfiles = glob.glob(tmpfile + "*" + ".txt")
+    data = b""
+    for f in sorted(txtfiles):
+        data += open(f, "rb").read()
+
+    return True,data
+
+
+# Process djvu file: use ddjvu to split it into tiff pages, then run
+# tesseract on each and concatenate the result.
+def _djvutesseract(config, path):
+    if not tmpdir:
+        return b""
+
+    tesseractlang = _guesstesseractlang(config, path)
+
+    #tesserrorfile = os.path.join(tmpdir.getpath(), "tesserrorfile")
+    tmpfile = os.path.join(tmpdir.getpath(), "ocrXXXXXX")
+
+    # Split pdf pages
+    try:
+        tmpdir.vacuumdir()
+        if ddjvucmd:
+            cmd = [ddjvucmd, "-format=tiff", "-1", "-eachpage", "-skip", path, tmpfile + "-%05d.tif"]
+        subprocess.check_call(cmd)
+    except Exception as e:
+        _deb("%s failed: %s" % (ddjvucmd,e))
+        return b""
+
+    # Note: unfortunately, pdftoppm silently fails if the temp file
+    # system is full. There is no really good way to check for
+    # this. We consider any empty file to signal an error
+
+    pages = glob.glob(tmpfile + "*")
+    for f in pages:
+        size = os.path.getsize(f)
+        if os.path.getsize(f) == 0:
+            _deb("ddjvucmd created empty files. "
                  "Suspecting full file system, failing")
             return False, ""
 
@@ -240,10 +313,12 @@ def runocr(config, path):
     ext = ext.lower()
     if ext in _okexts:
         return _simpletesseract(config, path)
-    else:
+    elif ext == '.pdf':
         return _pdftesseract(config, path)
+    elif ext == '.djvu':
+        return _djvutesseract(config, path)
 
-   
+
 
 
 if __name__ == '__main__':

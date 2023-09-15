@@ -185,7 +185,7 @@ directories section, which defines the directories from which the filesystem
 exploration starts.
 
 On Unix-like systems, you may need to install the appropriate supporting
-applications for document types that need them (for example antiword for 
+applications for document types that need them (for example antiword for
 Microsoft Word files). The Windows package is self-contained and includes most
 useful auxiliary programs.
 
@@ -397,7 +397,7 @@ In order to do this, you would create an empty directory in a location of your
 choice, and then instruct recoll or recollindex to use it by setting either a
 command line option (-c /some/directory), or an environment variable
 (RECOLL_CONFDIR=/some/directory). Any modification performed by the commands
-(e.g. configuration customisation or searches by recoll or index creation by 
+(e.g. configuration customisation or searches by recoll or index creation by
 recollindex) would then apply to the new directory and not to the default one.
 
 Once multiple indexes are created, you can use each of them separately by
@@ -405,7 +405,7 @@ setting the -c option or the RECOLL_CONFDIR environment variable when starting
 a command, to select the desired index.
 
 It is also possible to instruct one configuration to query one or several other
-indexes in addition to its own, by using the External index function in the 
+indexes in addition to its own, by using the External index function in the
 recoll GUI, or some equivalent in the command line and programming tools.
 
 A plausible usage scenario for the multiple index feature would be for a system
@@ -447,7 +447,7 @@ selecting the menu option File → Show Missing Helpers in the recoll GUI. It is
 stored in the missing text file inside the configuration directory.
 
 After installing a missing handler, you may need to tell recollindex to retry
-the failed files, by adding option -k to the command line, or by using the GUI 
+the failed files, by adding option -k to the command line, or by using the GUI
 File → Special indexing menu. This is because recollindex, in its default
 operation mode, will not retry files which caused an error during an earlier
 pass. In special cases, it may be useful to reset the data for a category of
@@ -517,7 +517,7 @@ be undesirable if a newer format is supported by the Xapian version.
 
 2.2. Index storage
 
-The default location for the index data is the xapiandb subdirectory of the 
+The default location for the index data is the xapiandb subdirectory of the
 Recoll configuration directory, typically $HOME/.recoll/xapiandb/ on Unix-like
 systems or C:/Users/[me]/Appdata/Local/Recoll/xapiandb on Windows. This can be
 changed via two different methods (with different purposes):
@@ -605,7 +605,7 @@ issue.
 The problem can be mitigated by observing the following rules:
 
   • Partition the data set and create several indexes of reasonable size rather
-    than a huge one. These indexes can then be queried in parallel (using the 
+    than a huge one. These indexes can then be queried in parallel (using the
     Recoll external indexes facility), or merged using xapian-compact.
 
   • Have a lot of RAM available and set the idxflushmb Recoll configuration
@@ -979,7 +979,7 @@ On Windows systems, the monitoring process is started from the recoll GUI File
 menu. On Unix-like systems, there are other possibilities, see the following
 sections.
 
-When this is in use, the recoll GUI File menu makes two operations available: 
+When this is in use, the recoll GUI File menu makes two operations available:
 Stop and Trigger incremental pass.
 
 Trigger incremental pass has the same effect as restarting the indexer, and
@@ -1125,7 +1125,7 @@ the following features:
 XMP fields extraction
 
 The rclpdf.py script in Recoll version 1.23.2 and later can extract XMP
-metadata fields by executing the pdfinfo command (usually found with 
+metadata fields by executing the pdfinfo command (usually found with
 poppler-utils). This is controlled by the pdfextrameta configuration variable,
 which specifies which tags to extract and, possibly, how to rename them.
 
@@ -1184,16 +1184,17 @@ target when opening the document, and permitting secondary search in the native
 tool).
 
 To enable the Recoll OCR feature, you need to install one of the supported OCR
-applications (tesseract or ABBYY), enable OCR in the PDF handler (by setting
-pdfocr to 1 in the index configuration file), and tell Recoll how to run the
+applications (tesseract or ABBYY), enable OCR in the PDF or DJVU handler (by setting
+pdfocr or djvuocr to 1 in the index configuration file), and tell Recoll how to run the
 OCR by setting configuration variables. All parameters can be localized in
 subdirectories through the usual main configuration mechanism (path sections).
 
 Example configuration fragment in recoll.conf:
 
 pdfocr = 1
+djvuocr = 1
 ocrprogs = tesseract
-pdfocrlang = eng
+tesseractlang = eng
 
 This facility got a major update in Recoll 1.26.5. Older versions had a more
 limited, non-caching capability to execute an external OCR program in the PDF
@@ -1356,9 +1357,9 @@ of course, such as not recording the query history).
 2.5.5. Unix-like systems: indexing visited Web pages
 
 With the help of a Firefox extension, Recoll can index the Internet pages that
-you visit. The extension has a long history: it was initially designed for the 
+you visit. The extension has a long history: it was initially designed for the
 Beagle indexer, then adapted to Recoll and the Firefox XUL API. The current
-version of the extension is located in the Mozilla add-ons repository uses the 
+version of the extension is located in the Mozilla add-ons repository uses the
 WebExtensions API, and works with current Firefox versions.
 
 The extension works by copying visited Web pages to an indexing queue
@@ -1370,7 +1371,7 @@ The local cache is not an archive
 As mentioned above, a copy of the indexed Web pages is retained by Recoll in a
 local cache (from which data is fetched for previews, or when resetting the
 index). The cache is not changed by an index reset, just read for indexing. The
-cache has a maximum size, which can be adjusted from the Index configuration / 
+cache has a maximum size, which can be adjusted from the Index configuration /
 Web history panel (webcachemaxmbs parameter in recoll.conf). Once the maximum
 size is reached, old pages are erased to make room for new ones. The pages
 which you want to keep indefinitely need to be explicitly archived elsewhere.
@@ -1469,7 +1470,7 @@ an alias for the standard Recoll keywords field, and the tmsu output will just
 augment its contents. This will avoid the need to extend the field
 configuration.
 
-Once re-indexing is performed (you will need to force the file reindexing, 
+Once re-indexing is performed (you will need to force the file reindexing,
 Recoll will not detect the need by itself), you will be able to search from the
 query language, through any of its aliases: tags:some/alternate/values or
 tags:all,these,values.
@@ -1637,7 +1638,7 @@ Clicking the Preview link will open an internal preview window for the
 document. Further Preview clicks for the same search will open tabs in the
 existing preview window. You can use Shift+Click to force the creation of
 another preview window, which may be useful to view the documents side by side.
-(You can also browse successive results in a single preview window by typing 
+(You can also browse successive results in a single preview window by typing
 Shift+ArrowUp/Down in the window).
 
 Clicking the Open link will start an external viewer for the document. By
@@ -1681,7 +1682,7 @@ editing the mimeview configuration file.
 When Use desktop preferences, at the top of the dialog, is checked, the desktop
 default is generally used, but there is a small default list of exceptions, for
 MIME types where the Recoll choice should override the desktop one. These are
-applications which are well integrated with Recoll, for example, on Linux, 
+applications which are well integrated with Recoll, for example, on Linux,
 evince for viewing PDF and Postscript files because of its support for opening
 the document at a specific page and passing a search string as an argument. You
 can add or remove document types to the exceptions by using the dialog.
@@ -1706,7 +1707,7 @@ by case basis.
 
 No results: the spelling suggestions
 
-When a search yields no result, and if the aspell dictionary is configured, 
+When a search yields no result, and if the aspell dictionary is configured,
 Recoll will try to check for misspellings among the query terms, and will
 propose lists of replacements. Clicking on one of the suggestions will replace
 the word and restart the search. You can hold any of the modifier keys (Ctrl,
@@ -2060,7 +2061,7 @@ The only thing that you need to know about XML for editing this file is that
 any opening tag like <label> needs to be matched by a closing tag after the
 value: </label>.
 
-You will normally edit the file with a regular text editor, like, e.g. vi or 
+You will normally edit the file with a regular text editor, like, e.g. vi or
 notepad. Double-clicking the file in a file manager may not work, because this
 usually opens it in a WEB browser, which will not let you modify the contents.
 
@@ -2218,7 +2219,7 @@ Spelling/Phonetic
     In this mode, you enter the term as you think it is spelled, and Recoll
     will do its best to find index terms that sound like your entry. This mode
     uses the Aspell spelling application, which must be installed on your
-    system for things to work (if your documents contain non-ascii characters, 
+    system for things to work (if your documents contain non-ascii characters,
     Recoll needs an aspell version newer than 0.60 for UTF-8 support). The
     language which is used to build the dictionary out of the index terms
     (which is done at the end of an indexing pass) is the one defined by your
@@ -2289,7 +2290,7 @@ On Windows, use semi-colons (;) as separators instead of colons.
 
 Another environment variable, RECOLL_ACTIVE_EXTRA_DBS allows adding to the
 active list of indexes. This variable was suggested and implemented by a Recoll
-user. It is mostly useful if you use scripts to mount external volumes with 
+user. It is mostly useful if you use scripts to mount external volumes with
 Recoll indexes. By using RECOLL_EXTRA_DBS and RECOLL_ACTIVE_EXTRA_DBS, you can
 add and activate the index for the mounted volume when starting recoll.
 Unreachable indexes will automatically be deactivated when starting up.
@@ -2557,7 +2558,7 @@ There are several tabs in the dialog, dealing with the interface itself, the
 parameters used for searching and returning results, and what indexes are
 searched.
 
-User interface parameters: 
+User interface parameters:
 
   • Highlight color for query terms: Terms from the user query are highlighted
     in the result list samples and the preview window. The color can be chosen
@@ -2627,13 +2628,13 @@ User interface parameters:
   • Remember sort activation state if set, Recoll will remember the sort tool
     stat between invocations. It normally starts with sorting disabled.
 
-Result list parameters: 
+Result list parameters:
 
   • Number of results in a result page
 
   • Result list font: There is quite a lot of information shown in the result
     list, and you may want to customize the font and/or font size. The rest of
-    the fonts used by Recoll are determined by your generic Qt config (try the 
+    the fonts used by Recoll are determined by your generic Qt config (try the
     qtconfig command).
 
   • Edit result list paragraph format string: allows you to change the
@@ -2652,7 +2653,7 @@ Result list parameters:
     which are usually made of several snippets from different parts of the
     document, this defines the snippet separator, an ellipsis by default.
 
-Search parameters: 
+Search parameters:
 
   • Hide duplicate results: decides if result list entries are shown for
     identical documents found in different places.
@@ -2735,7 +2736,7 @@ The snippets list is a table and has a snippets class attribute. Each paragraph
 in the result list is a table, with class respar, but this can be changed by
 editing the paragraph format.
 
-There are a few examples on the page about customising the result list on the 
+There are a few examples on the page about customising the result list on the
 Recoll Web site.
 
 The paragraph format
@@ -3138,7 +3139,7 @@ which the values are interpreted differently. Regular processing does not apply
     supported and will produce strange results.
 
   • type or rclcat for specifying the category (as in text/media/presentation/
-    etc.). The classification of MIME types in categories is defined in the 
+    etc.). The classification of MIME types in categories is defined in the
     Recoll configuration (mimeconf), and can be modified or extended. The
     default category names are those which permit filtering results in the main
     GUI screen. Categories are OR'ed like MIME types above, and can be negated
@@ -3398,13 +3399,13 @@ home/me URL from the index to file:///net/server/home/me, allowing accesses
 from the client.
 
 The translations are defined in the ptrans configuration file, which can be
-edited by hand or from the GUI external indexes configuration dialog: 
+edited by hand or from the GUI external indexes configuration dialog:
 Preferences → External index dialog, then click the Paths translations button
 on the right below the index list: translations will be set for the main index
 if no external index is currently selected in the list, or else for the
 currently selected index.
 
-Example entry from a ptrans file: 
+Example entry from a ptrans file:
 
 [/path/to/external/xapiandb]
 /some/index/path = /some/local/path
@@ -3502,7 +3503,7 @@ detailed instructions are on this wiki page.
 This is probably obsolete now. Anyway:
 
 The Recoll source tree contains the source code to the recoll_applet, a small
-application derived from the find_applet. This can be used to add a small 
+application derived from the find_applet. This can be used to add a small
 Recoll launcher to the KDE panel.
 
 The applet is not automatically built with the main Recoll programs, nor is it
@@ -3554,7 +3555,7 @@ recollindex. This latter kind will not be described here.
 
 There are two kinds of external executable input handlers:
 
-  • Simple exec handlers run once and exit. They can be bare programs like 
+  • Simple exec handlers run once and exit. They can be bare programs like
     antiword, or scripts using other programs. They are very simple to write,
     because they just need to print the converted document to the standard
     output. Their output can be plain text or HTML. HTML is usually preferred
@@ -3572,7 +3573,7 @@ There are two kinds of external executable input handlers:
     startup time which can be very significant), or multiple documents per file
     (e.g.: for archives or multi-chapter publications). They communicate with
     the indexer through a simple protocol, but are nevertheless a bit more
-    complicated than the older kind. Most of the new handlers are written in 
+    complicated than the older kind. Most of the new handlers are written in
     Python (exception: rclimg which is written in Perl because exiftool has no
     real Python equivalent). The Python handlers use common modules to factor
     out the boilerplate, which can make them very simple in favorable cases.
@@ -3912,7 +3913,7 @@ Shell Search Provider , the Recoll Web UI, and the upmpdcli UPnP Media Server,
 in addition to many small scripts.
 
 The index update section of the API may be used to create and update Recoll
-indexes on specific configurations (separate from the ones created by 
+indexes on specific configurations (separate from the ones created by
 recollindex). The resulting databases can be queried alone, or in conjunction
 with regular ones, through the GUI or any of the query interfaces.
 
@@ -4467,7 +4468,7 @@ samples directory.
     record can be processed as a standalone document (no ipath necessary). The
     sample has full preview and open support (the latter using a Joplin
     callback URL which allows displaying the result note inside the native
-    app), so it could actually be useful to perform a unified search of the 
+    app), so it could actually be useful to perform a unified search of the
     Joplin data and the regular Recoll data.
 
 See the comments inside the scripts for more information.
@@ -4497,11 +4498,11 @@ nothing else to install.
 
 On Unix-like systems, the package management tools will automatically install
 hard dependencies for packages obtained from a proper package repository. You
-will have to deal with them by hand for downloaded packages (for example, when 
+will have to deal with them by hand for downloaded packages (for example, when
 dpkg complains about missing dependencies).
 
 In all cases, you will have to check or install supporting applications for the
-file types that you want to index beyond those that are natively processed by 
+file types that you want to index beyond those that are natively processed by
 Recoll (text, HTML, email files, and a few others).
 
 You should also maybe have a look at the configuration section (but this may
@@ -4564,7 +4565,7 @@ build. (See the configure section further down: --disable-qtgui).
 
 The shopping list follows:
 
-  • If you start from git code, you will need the git command (git), and the 
+  • If you start from git code, you will need the git command (git), and the
     autoconf, automake and libtool triad (autoconf, automake, libtool). These
     are not needed for building from tar distributions.
 
@@ -4686,7 +4687,7 @@ without need for Qt). This is done by default if --disable-qtgui is set but
 this option enables forcing it.
 
 --disable-pic (Recoll versions up to 1.21 only) will compile Recoll with
-position-dependant code. This is incompatible with building the KIO or the 
+position-dependant code. This is incompatible with building the KIO or the
 Python or PHP extensions, but might yield very marginally faster code.
 
 --without-systemd Disable the automatic installation of systemd unit files.
@@ -4739,7 +4740,7 @@ Python module for a non-standard Python version.
 
 5.4. Configuration overview
 
-Most of the parameters specific to the recoll GUI are set through the 
+Most of the parameters specific to the recoll GUI are set through the
 Preferences menu and stored in the standard Qt place ($HOME/.config/Recoll.org/
 recoll.conf). You probably do not want to edit this by hand.
 
@@ -4779,7 +4780,7 @@ files. Please note that the two, currently single, values will probably be
 interpreted as colon-separated lists in the future: do not use colon characters
 inside the directory paths.
 
-If the default configuration directory does not exist when recoll or 
+If the default configuration directory does not exist when recoll or
 recollindex are started, it will be created with a set of empty configuration
 files. recoll will give you a chance to edit the configuration file before
 starting indexing. recollindex will proceed immediately. To avoid mistakes, the
@@ -5950,7 +5951,7 @@ should not be modified casually. See the comments in the file.
 The file also contains other definitions which affect the query language and
 the GUI, and which, in retrospect, should have been stored elsewhere.
 
-The [icons] section allows you to change the icons which are displayed by the 
+The [icons] section allows you to change the icons which are displayed by the
 recoll GUI in the result lists (the values are the basenames of the png images
 inside the iconsdir directory (which is itself defined in recoll.conf).
 
@@ -6011,7 +6012,7 @@ other = rclcat:other
 
 mimeview specifies which programs are started when you click on an Open link in
 a result list. E.g.: HTML is normally displayed using firefox, but you may
-prefer Konqueror, your openoffice.org program might be named oofice instead of 
+prefer Konqueror, your openoffice.org program might be named oofice instead of
 openoffice etc.
 
 Changes to this file can be done by direct editing, or through the recoll GUI

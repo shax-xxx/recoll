@@ -23,11 +23,17 @@ import re
 import rclexecm
 import subprocess
 from rclbasehandler import RclBaseHandler
+import rclconfig
+
+ocrproc = None
 
 class DJVUExtractor(RclBaseHandler):
 
     def __init__(self, em):
         super(DJVUExtractor, self).__init__(em)
+        self.config = rclconfig.RclConfig()
+        self.confdir = self.config.getConfDir()
+
         self.djvutxt = rclexecm.which("djvutxt")
         if not self.djvutxt:
             print("RECFILTERROR HELPERNOTFOUND djvutxt")
@@ -60,6 +66,19 @@ class DJVUExtractor(RclBaseHandler):
 
         # Main text
         txtdata = subprocess.check_output([self.djvutxt, fn])
+        if not txtdata:
+            self.config.setKeyDir(os.path.dirname(fn))
+            s = self.config.getConfParam("djvuocr")
+            if rclexecm.configparamtrue(s):
+                try:
+                    cmd = [sys.executable, os.path.join(_execdir, "rclocr.py"), fn]
+                    global ocrproc
+                    ocrproc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                    txtdata, stderr = ocrproc.communicate()
+                    ocrproc = None
+                except Exception as e:
+                    self.em.rclog(f"{cmd} failed: {e}")
+                    pass
 
         txtdata = txtdata.decode('UTF-8', 'replace')
 
@@ -78,6 +97,7 @@ class DJVUExtractor(RclBaseHandler):
 
 
 # Main program: create protocol handler and extractor and run them
+_execdir = os.path.dirname(sys.argv[0])
 proto = rclexecm.RclExecM()
 extract = DJVUExtractor(proto)
 rclexecm.main(proto, extract)
